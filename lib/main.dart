@@ -1,10 +1,22 @@
+import 'package:bhagavat_gita/provider/language.dart';
+import 'package:bhagavat_gita/view/Details/Details.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'view/HomePage/HomePage.dart';
 import 'view/HomePage/splash.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => LanguageProvider(),
+        )
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,6 +29,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => SplashScreen(),
         'Home': (context) => HomePage(),
+        'Detail': (context) => DetailPage(),
       },
     );
   }
