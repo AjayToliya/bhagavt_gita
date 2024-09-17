@@ -67,7 +67,7 @@ class DetailPage extends StatelessWidget {
             children: [
               Center(
                 child: SizedBox(
-                  height: 250, // Adjusted height for better visibility
+                  height: 250,
                   width: 200,
                   child: Image.network(
                     chapter['image_name'],
@@ -80,17 +80,14 @@ class DetailPage extends StatelessWidget {
                 child: Text(
                   _getChapterSummary(chapter, currentLanguage),
                   style: TextStyle(
-                    fontSize: 12, // Decreased font size for readability
+                    fontSize: 12,
                     fontWeight: FontWeight.normal,
                     color: Colors.black87,
                   ),
                 ),
               ),
-
-              // ListView.builder inside a SizedBox to limit its height
               SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    100, // Adjust height as needed
+                height: MediaQuery.of(context).size.height - 100,
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
                   itemCount: chapter['verses'].length,
@@ -109,8 +106,7 @@ class DetailPage extends StatelessWidget {
                         title: Text(
                           'Sloka ${verse['Sloka'].toString()}',
                           style: TextStyle(
-                            fontSize:
-                                16, // Decreased font size for better visibility
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF8B4513),
                           ),
@@ -127,15 +123,13 @@ class DetailPage extends StatelessWidget {
                             Text(
                               _getVerseContent(verse, currentLanguage),
                               style: TextStyle(
-                                fontSize:
-                                    12, // Decreased font size for translation
+                                fontSize: 12,
                                 color: Colors.grey[700],
                               ),
                             ),
                           ],
                         ),
                         onTap: () {
-                          // Show Bottom Sheet when a verse is tapped
                           showVerseBottomSheet(
                             context,
                             verse['Sloka'].toString(),
@@ -155,7 +149,6 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  // Function to get the chapter summary based on the selected language
   String _getChapterSummary(Map chapter, String language) {
     switch (language) {
       case 'Hindi':
@@ -166,7 +159,6 @@ class DetailPage extends StatelessWidget {
     }
   }
 
-  // Function to get the verse content based on the selected language
   String _getVerseContent(Map verse, String language) {
     switch (language) {
       case 'Hindi':
@@ -177,7 +169,6 @@ class DetailPage extends StatelessWidget {
     }
   }
 
-  // Bottom Sheet function to show the content of the verse with translations
   void showVerseBottomSheet(
     BuildContext context,
     String slokaNumber,
@@ -208,85 +199,72 @@ class DetailPage extends StatelessWidget {
               Text(
                 "Sloka $slokaNumber",
                 style: TextStyle(
-                  fontSize: 18, // Decreased font size for Sloka number
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8B4513), // Deep brown for Sloka number
+                  color: Color(0xFF8B4513),
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16), // Added spacing between elements
-
-              // Sanskrit Verse
+              SizedBox(height: 16),
               Text(
-                verse['Verse'] ?? '', // Sanskrit verse
+                verse['Verse'] ?? '',
                 style: TextStyle(
-                  fontSize: 16, // Decreased font size for Sanskrit verse
+                  fontSize: 16,
                   color: Colors.black87,
-                  fontStyle: FontStyle.italic, // Italic for Sanskrit
+                  fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 24), // Larger space for sectioning
-
-              // Hindi Section Title
+              SizedBox(height: 24),
               Text(
                 "Translation (Hindi):",
                 style: TextStyle(
-                  fontSize: 18, // Decreased font size for section title
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8B4513), // Same deep brown for section title
+                  color: Color(0xFF8B4513),
                 ),
               ),
               SizedBox(height: 10),
-
-              // Hindi Translation
               Text(
                 verse['Translation_Hindi'] ?? '',
                 style: TextStyle(
-                  fontSize: 14, // Decreased font size for Hindi translation
-                  color: Colors.grey[700],
-                ),
-                textAlign: TextAlign
-                    .justify, // Justify for better paragraph readability
-              ),
-              SizedBox(height: 24), // Space before the next translation
-
-              // English Section Title
-              Text(
-                "Translation (English):",
-                style: TextStyle(
-                  fontSize: 18, // Decreased font size for section title
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF8B4513), // Deep brown for section title
-                ),
-              ),
-              SizedBox(height: 10),
-
-              // English Translation
-              Text(
-                verse['Translation_English'] ?? '',
-                style: TextStyle(
-                  fontSize: 14, // Decreased font size for English translation
+                  fontSize: 14,
                   color: Colors.grey[700],
                 ),
                 textAlign: TextAlign.justify,
               ),
-              SizedBox(height: 24), // Space before the button
-
-              // Close Button
+              SizedBox(height: 24),
+              Text(
+                "Translation (English):",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                verse['Translation_English'] ?? '',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the Bottom Sheet
+                  Navigator.pop(context);
                 },
                 child: Text(
                   'Close',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF8B4513), // Deep brown for button
+                  backgroundColor: Color(0xFF8B4513),
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12), // Rounded button
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ),
