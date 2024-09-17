@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/Image/1.jpeg"),
-            fit: BoxFit.fitWidth, // Cover the entire screen with the image
+            fit: BoxFit.cover,
           ),
         ),
         child: Stack(
@@ -39,16 +39,9 @@ class _SplashScreenState extends State<SplashScreen>
               bottom: 80,
               child: Column(
                 children: [
-                  Text(
-                    'Welcome to MyApp',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black, // Adjust text color for visibility
-                    ),
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
-                  const SizedBox(height: 20),
-                  CircularProgressIndicator(),
                 ],
               ),
             ),

@@ -8,34 +8,33 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access LanguageProvider instance
     LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
+    String currentLanguage = languageProvider.selectedLanguage;
 
-    // Extract chapter data from arguments
     Map chapter = ModalRoute.of(context)!.settings.arguments as Map;
 
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Icon(
-              Icons.arrow_back_outlined,
-              color: Colors.white,
-            )),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back_outlined,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
         title: Text(
           '${chapter['name']}',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF8B5A2B),
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.language, color: Colors.white),
             onSelected: (String language) {
-              languageProvider
-                  .changeLanguage(language); // Update language using provider
+              languageProvider.changeLanguage(language);
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
@@ -50,95 +49,204 @@ class DetailPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Chapter ${chapter['chapter_number'].toString()}',
-                style: TextStyle(
-                  fontSize: 26.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Meaning of Chapter: ${chapter['name_meaning'].toString()}',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 16),
-              Container(
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10.0,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Image.network(
-                    chapter['image_name'], // Replace with your image URL
-                    fit: BoxFit
-                        .cover, // Adjust the image's fit to cover the container
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      }
-                    },
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return Center(
-                        child: Icon(
-                          Icons.error,
-                          color: Colors.red,
-                          size: 50.0,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              Divider(color: Colors.grey),
-              SizedBox(height: 16),
-              Text(
-                languageProvider.selectedLanguage == 'Hindi'
-                    ? chapter['chapter_summary_hindi']
-                    : chapter['chapter_summary'],
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black87,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.justify,
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFFFEBCD), // Light golden beige
+              Color(0xFFFFD700), // Golden yellow
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: chapter['verses'].length,
+            itemBuilder: (context, i) {
+              Map verse = chapter['verses'][i];
+
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 5,
+                color: Color(0xFFFFF8E1),
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(12),
+                  title: Text(
+                    'Sloka ${verse['Sloka'].toString()}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF8B4513),
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        verse['Verse'],
+                        style: TextStyle(fontSize: 16, color: Colors.black87),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        _getVerseContent(verse, currentLanguage),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    // Show Bottom Sheet when a verse is tapped
+                    showVerseBottomSheet(
+                      context,
+                      verse['Sloka'].toString(),
+                      verse,
+                      currentLanguage,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ),
       ),
+    );
+  }
+
+  // Function to get the verse content based on the selected language
+  String _getVerseContent(Map verse, String language) {
+    switch (language) {
+      case 'Hindi':
+        return verse['Translation_Hindi'];
+      case 'English':
+      default:
+        return verse['Translation_English'];
+    }
+  }
+
+  // Bottom Sheet function to show the content of the verse with translations
+  void showVerseBottomSheet(
+    BuildContext context,
+    String slokaNumber,
+    Map verse,
+    String currentLanguage,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFFEBCD), // Light golden beige
+                  Color(0xFFFFD700), // Golden yellow
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Text(
+                  "Sloka $slokaNumber",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF8B4513), // Deep brown for Sloka number
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16), // Added spacing between elements
+
+                // Sanskrit Verse
+                Text(
+                  verse['Verse'], // Sanskrit verse
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black87,
+                    fontStyle: FontStyle.italic, // Italic for Sanskrit
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24), // Larger space for sectioning
+
+                // Hindi Section Title
+                Text(
+                  "Translation (Hindi):",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        Color(0xFF8B4513), // Same deep brown for section title
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // Hindi Translation
+                Text(
+                  verse['Translation_Hindi'],
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                  ),
+                  textAlign: TextAlign
+                      .justify, // Justify for better paragraph readability
+                ),
+                SizedBox(height: 24), // Space before the next translation
+
+                // English Section Title
+                Text(
+                  "Translation (English):",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF8B4513), // Deep brown for section title
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // English Translation
+                Text(
+                  verse['Translation_English'],
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
+                SizedBox(height: 24), // Space before the button
+
+                // Close Button
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the Bottom Sheet
+                  },
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF8B4513), // Deep brown for button
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // Rounded button
+                    ),
+                  ),
+                ),
+              ],
+            ));
+      },
     );
   }
 }
