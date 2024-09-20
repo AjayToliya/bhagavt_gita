@@ -30,7 +30,7 @@ class DetailPage extends StatelessWidget {
           style: TextStyle(
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFF8B5A2B),
+        backgroundColor: Color(0xFFFFD700),
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.language, color: Colors.white),
@@ -52,38 +52,19 @@ class DetailPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFFFEBCD), // Light golden beige
-                Color(0xFFFFD700), // Golden yellow
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
+          color: Colors.yellow,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: SizedBox(
-                  height: 250,
-                  width: 200,
-                  child: Image.network(
-                    chapter['image_name'],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   _getChapterSummary(chapter, currentLanguage),
                   style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    height: 1.5,
                   ),
+                  textAlign: TextAlign.justify,
                 ),
               ),
               SizedBox(
@@ -108,7 +89,7 @@ class DetailPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF8B4513),
+                            color: Color(0xFF8B4513), // Brown
                           ),
                         ),
                         subtitle: Column(
@@ -177,21 +158,18 @@ class DetailPage extends StatelessWidget {
   ) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      backgroundColor: Colors.white,
+      elevation: 5,
       builder: (BuildContext context) {
         return Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFFFEBCD), // Light golden beige
-                Color(0xFFFFD700), // Golden yellow
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: Color(0xFFFFD700),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: ListView(
             shrinkWrap: true,
@@ -199,9 +177,9 @@ class DetailPage extends StatelessWidget {
               Text(
                 "Sloka $slokaNumber",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8B4513),
+                  color: Color(0xFFFFFFFF),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -210,7 +188,7 @@ class DetailPage extends StatelessWidget {
                 verse['Verse'] ?? '',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black87,
+                  color: Color(0xFF8B4513),
                   fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,
@@ -221,7 +199,7 @@ class DetailPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8B4513),
+                  color: Color(0xFFFFFFFF),
                 ),
               ),
               SizedBox(height: 10),
@@ -229,7 +207,7 @@ class DetailPage extends StatelessWidget {
                 verse['Translation_Hindi'] ?? '',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[700],
+                  color: Color(0xFF8B4513), // Brown
                 ),
                 textAlign: TextAlign.justify,
               ),
@@ -239,7 +217,7 @@ class DetailPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8B4513),
+                  color: Color(0xFFFFFFFF),
                 ),
               ),
               SizedBox(height: 10),
@@ -247,7 +225,7 @@ class DetailPage extends StatelessWidget {
                 verse['Translation_English'] ?? '',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[700],
+                  color: Color(0xFF8B4513),
                 ),
                 textAlign: TextAlign.justify,
               ),
@@ -261,7 +239,7 @@ class DetailPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF8B4513),
+                  backgroundColor: Color(0xFF8B4513), // Brown
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

@@ -35,7 +35,8 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF8B5A2B),
+        backgroundColor: Color(0xFFFFD700),
+        iconTheme: IconThemeData(color: Colors.white),
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.language, color: Colors.white),
@@ -56,16 +57,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFFFEBCD), // Light golden beige
-              Color(0xFFFFD700), // Golden yellow
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        // Light golden beige
+        color: Color(0xFFFFD700),
+
         child: FutureBuilder(
           future: jsondata,
           builder: (context, AsyncSnapshot<String> snapshot) {
@@ -73,7 +67,7 @@ class _HomePageState extends State<HomePage> {
               return Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Color(0xFFFFD700), // Golden yellow for the loader
+                    Color(0xFFFFD700),
                   ),
                 ),
               );
